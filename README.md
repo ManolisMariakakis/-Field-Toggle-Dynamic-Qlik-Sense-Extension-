@@ -29,6 +29,14 @@ Label
 - Clean, unobtrusive UI
 
 ---
+## 🛠️ Tech Notes
+
+- Built with the standard `qlik` and `enigmaModel` APIs.  
+- No external dependencies.  
+- Compatible with Qlik Sense Desktop and Qlik Sense Enterprise.  
+- Tested with Qlik Sense June 2025 release.
+
+---
 
 ## 📁 Folder Structure
 
