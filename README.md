@@ -104,6 +104,134 @@ Then toggle `vTableType` via this extension (if added as a field).
 
 ---
 
+## 📜 Full JavaScript Source (`field-toggle-dynamic.js`)
+
+```javascript
+define([
+  'qlik',
+  'jquery'
+], function (qlik, $) {
+  'use strict';
+
+  return {
+    definition: {
+      type: "items",
+      component: "accordion",
+      items: {
+        fieldsGroup: {
+          label: "Dynamic Πεδία / Στήλες",
+          type: "items",
+          items: {
+            fieldsCsv: {
+              ref: "props.fieldsCsv",
+              label: "Λίστα πεδίων (Label|Variable, comma-separated)",
+              type: "string",
+              defaultValue:
+                "ΚΑΤΑΣΤΗΜΑ|vShowField_KATASTHMA, " +
+                "ΟΜΑΔΑ|vShowField_OMADA, " +
+                "ΥΠΟΟΜΑΔΑ|vShowField_YPOOMADA, " +
+                "ΕΙΔΟΣ|vShowField_EIDOS, " +
+                "ΠΡΟΜΗΘΕΥΤΗΣ|vShowField_PROMHTHEFTHS, " +
+                "ΑΛΥΣΙΔΑ|vShowField_ALYSIDA"
+            }
+          }
+        }
+      }
+    },
+
+    paint: function ($element, layout) {
+      var app = qlik.currApp(this);
+
+      var raw = (layout.props.fieldsCsv || "").trim();
+      var fieldsConfig = [];
+
+      if (raw.length > 0) {
+        raw.split(",").forEach(function (item) {
+          var token = item.trim();
+          if (!token) return;
+
+          var parts = token.split("|");
+          var label = parts[0].trim();
+          var varName = (parts[1] ? parts[1] : parts[0]).trim();
+
+          if (label && varName) {
+            fieldsConfig.push({ label: label, varRef: varName });
+          }
+        });
+      }
+
+      if (fieldsConfig.length === 0) {
+        $element.html("<div style='padding:6px;font-size:12px;'>Δεν έχουν οριστεί πεδία.</div>");
+        return qlik.Promise.resolve();
+      }
+
+      var html = `
+        <style>
+          .ftd-row {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 6px;
+          }
+          .ftd-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            font-size: 14px;
+            white-space: nowrap;
+            margin-top: -10px;
+          }
+          .ftd-item input {
+            margin-right: 4px;
+            margin-top: -4px;
+          }
+        </style>
+        <div class="ftd-row">
+      `;
+
+      fieldsConfig.forEach(function (f) {
+        html += `
+          <div class="ftd-item">
+            <input type="checkbox" class="ftd-chk" data-var="${f.varRef}">
+            ${f.label}
+          </div>
+        `;
+      });
+
+      html += `</div>`;
+
+      $element.html(html);
+
+      $element.find(".ftd-chk").off("change");
+
+      fieldsConfig.forEach(function (f) {
+        app.variable.getByName(f.varRef).then(function (v) {
+          v.getLayout().then(function (vlayout) {
+            var currentValue = (vlayout.qText || "").trim();
+            if (currentValue === "") currentValue = "1";
+
+            $element
+              .find('input.ftd-chk[data-var="' + f.varRef + '"]')
+              .prop("checked", currentValue === "1");
+          });
+        });
+      });
+
+      $element.find(".ftd-chk").on("change", function () {
+        var varName = $(this).data("var");
+        var val = $(this).is(":checked") ? "1" : "0";
+        if (varName) app.variable.setStringValue(varName, val);
+      });
+
+      return qlik.Promise.resolve();
+    }
+  };
+});
+
+```
+
 ## 🖼️ Example UI
 
 ```
