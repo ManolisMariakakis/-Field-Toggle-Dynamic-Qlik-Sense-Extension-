@@ -127,12 +127,12 @@ define([
       component: "accordion",
       items: {
         fieldsGroup: {
-          label: "Dynamic Πεδία / Στήλες",
+          label: "Dynamic fields/columns",
           type: "items",
           items: {
             fieldsCsv: {
               ref: "props.fieldsCsv",
-              label: "Λίστα πεδίων (Label|Variable, comma-separated)",
+              label: "Fields list (Label|Variable, comma-separated)",
               type: "string",
               defaultValue:
                 "ΚΑΤΑΣΤΗΜΑ|vShowField_KATASTHMA, " +
@@ -169,7 +169,7 @@ define([
       }
 
       if (fieldsConfig.length === 0) {
-        $element.html("<div style='padding:6px;font-size:12px;'>Δεν έχουν οριστεί πεδία.</div>");
+        $element.html("<div style='padding:6px;font-size:12px;'>No fields have been defined.</div>");
         return qlik.Promise.resolve();
       }
 
