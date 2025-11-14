@@ -49,6 +49,17 @@ field-toggle-dynamic/
 
 ---
 
+## 🧩 Installation
+
+1. **Download the ZIP file** of the extension from GitHub.  
+2. In **Qlik Sense Enterprise for Windows**, go to the **QMC (Qlik Management Console)**.  
+3. Open the **Extensions** section.  
+4. Click **Import**, then select the downloaded ZIP file (`field-toggle-dynamic.zip`).  
+5. Once imported, open your Qlik Sense app and add **field-toggle-dynamic** to any sheet.
+
+> 🧪 Tested on **Qlik Sense Enterprise for Windows – May 2025 release**.
+
+---
 ## 🧩 Configuration
 
 In the extension’s property panel you will find:
